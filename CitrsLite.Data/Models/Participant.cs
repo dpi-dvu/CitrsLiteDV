@@ -20,6 +20,7 @@ namespace CitrsLite.Data.Models
         /// The name of the Participant
         /// </summary>
         [Required]
+        [StringLength(100)]
         public string Name { get; set; }
         /// <summary>
         /// The type of Participant (Government/Research/Nursery, etc.)
@@ -29,6 +30,7 @@ namespace CitrsLite.Data.Models
         /// <summary>
         /// A brief summary or collection of comments about the Participant
         /// </summary>
+        [StringLength(1000)]
         public string? Description { get; set; }
         /// <summary>
         /// The phone number for the Participant
