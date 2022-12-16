@@ -1,12 +1,12 @@
 ﻿<MudPaper>
-    <MudNavMenu Color="Color.Primary" Margin="Margin.Normal">
-        <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudNavMenu Color="Color.Primary" Margin="Margin.Normal" Bordered="true">
+        <MudContainer Class="my-2">
             <MudText Typo="Typo.h3" Class="px-2" Align="Align.Center" Style="font-weight:bold">CITRS</MudText>
             <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary mb-2" Align="Align.Center">
                 Citrus Indexing, Tracking, and Registration System
             </MudText>
         </MudContainer>
-        <MudDivider Class="my-2" />
+        <MudDivider />
         <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
         <MudNavGroup Title="Participants" Icon="@Icons.Material.Filled.People" Expanded="false">
             <MudNavLink Href="/participant/add" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Add Participant</MudNavLink>
