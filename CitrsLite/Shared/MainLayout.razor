@@ -6,12 +6,12 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Color="Color.Inherit" Elevation="0">
+    <MudAppBar Color="Color.Inherit">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
         <LoginDisplay />
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="1" Color="Color.Secondary">
+    <MudDrawer @bind-Open="_drawerOpen" Color="Color.Secondary">
         <NavMenu />
     </MudDrawer>
     <MudMainContent>

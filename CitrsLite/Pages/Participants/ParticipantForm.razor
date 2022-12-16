@@ -16,10 +16,25 @@
                     <CardHeaderContent>
                         <MudText Typo="Typo.h6" Align="Align.Center">Add Participant</MudText>
                     </CardHeaderContent>
-                </MudCardHeader>
+
+                </MudCardHeader>                    
+                <MudItem>
+                    <MudPaper>
+                        @if (success)
+                        {
+                            <MudText Color="Color.Success" Align="Align.Center">Success</MudText>
+                        }
+                        else
+                        {
+                            <MudText Color="Color.Error" Align="Align.Center">
+                                <ValidationSummary />
+                            </MudText>
+                        }
+                    </MudPaper>
+                </MudItem>
                 <MudCardContent>
                     <MudTextField Label="Name" Class="mt-3" @bind-Value="Model.Name" For="@(() => Model.Name)" />
-                    <MudSelect T="string" Label="Type" AnchorOrigin="Origin.BottomCenter">
+                    <MudSelect T="string" Label="Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="Model.Type" For="@(() => Model.Type)">
                         @foreach (var partType in Enum.GetValues(typeof(ParticipantType)))
                         {
                             <MudSelectItem Value="@partType.ToString()">@partType.ToString()?.Replace("_"," ")</MudSelectItem>
@@ -42,11 +57,13 @@
 </EditForm>
 
 @code {
-    private String Message = String.Empty;
+    private bool success;
 
-    public void CreateParticipant()
+    public void CreateParticipant(EditContext context)
     {
         participantService.CreateAysnc(Model);
+        success = true;
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync()
