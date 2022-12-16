@@ -4,65 +4,66 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject CitrsLite.Business.Services.ParticipantService participantService
 @inject AuthenticationStateProvider authenticationStateProvider
-
-<h2>Participant Form</h2>
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
 
 <EditForm Model=@Model OnValidSubmit="CreateParticipant">
-    <label>
-        <h4>Name</h4>
-        <InputText @bind-Value=Model.Name></InputText>
-    </label>
-    <label>
-        <h4>Type</h4>
-        <InputSelect Name="type" @bind-Value=Model.Type>
-            @foreach(var partType in Enum.GetValues(typeof(ParticipantType)))
-            {
-                <option Value="@partType">@partType.ToString().Replace("_", " ")</option>
-            }
-        </InputSelect>
-    </label>
-    <p></p>
-    <label>
-        <h4>Description</h4>
-        <InputTextArea @bind-Value=Model.Description></InputTextArea>
-    </label>
-    <p></p>
-    <label>
-        <h4>Phone Number</h4>
-        <InputText @bind-Value=Model.PhoneNumber></InputText>
-    </label>
-    <p></p>
-    <label>
-        <h4>Address</h4>
-        <InputText @bind-Value=Model.Address></InputText>
-    </label>    
-    <p></p>
-    <label>
-        <h4>City</h4>
-        <InputText @bind-Value=Model.City></InputText>
-    </label>    
-    <p></p>
-    <label>
-        <h4>State</h4>
-        <InputText @bind-Value=Model.State></InputText>
-    </label>    
-    <p></p>
-    <label>
-        <h4>Active?</h4>
-        <InputCheckbox @bind-Value="@Model.IsActive"></InputCheckbox>
-    </label>
-    <p></p>
-    <input type="submit" class="btn btn-primary" value="Save"/>
-    <p></p>
-    <div>@Message</div>
+<DataAnnotationsValidator />
+    <MudGrid class="py-3" Justify="Justify.Center">
+        <MudItem xs="8">
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6" Align="Align.Center">Add Participant</MudText>
+                    </CardHeaderContent>
+
+                </MudCardHeader>                    
+                <MudItem>
+                    <MudPaper>
+                        @if (success)
+                        {
+                            <MudText Color="Color.Success" Align="Align.Center">Success</MudText>
+                        }
+                        else
+                        {
+                            <MudText Color="Color.Error" Align="Align.Center">
+                                <ValidationSummary />
+                            </MudText>
+                        }
+                    </MudPaper>
+                </MudItem>
+                <MudCardContent>
+                    <MudTextField Label="Name" Class="mt-3" @bind-Value="Model.Name" For="@(() => Model.Name)" />
+                    <MudSelect T="string" Label="Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="Model.Type" For="@(() => Model.Type)">
+                        @foreach (var partType in Enum.GetValues(typeof(ParticipantType)))
+                        {
+                            <MudSelectItem Value="@partType.ToString()">@partType.ToString()?.Replace("_"," ")</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudTextField T="string" Label="Description" Class="mt-3" Variant="Variant.Outlined" Lines="5"
+                                  @bind-Value="Model.Description" For="@(() => Model.Description)" />
+                    <MudTextField Label="Phone Number" Class="mt-3" @bind-Value="Model.PhoneNumber" For="@(() => Model.PhoneNumber)" />
+                    <MudTextField Label="Address" Class="mt-3" @bind-Value="Model.Address" For="@(() => Model.Address)" />
+                    <MudTextField Label="City" Class="mt-3" @bind-Value="Model.City" For="@(() => Model.City)" />
+                    <MudTextField Label="State" Class="mt-3" @bind-Value="Model.State" For="@(() => Model.State)" />
+                    <MudCheckBox Label="Active?" Class="mt-3" @bind-Checked="@Model.IsActive" Color="Color.Primary"></MudCheckBox>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
 </EditForm>
 
 @code {
-    private String Message = String.Empty;
+    private bool success;
 
-    public void CreateParticipant()
+    public void CreateParticipant(EditContext context)
     {
         participantService.CreateAysnc(Model);
+        success = true;
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync()
