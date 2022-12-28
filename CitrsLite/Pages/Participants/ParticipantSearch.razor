@@ -1,0 +1,19 @@
+﻿@page "/participant/search"
+@inject CitrsLite.Business.Services.ParticipantService participantService
+@using CitrsLite.Data.Models
+
+<MudDataGrid Items="@Participants.Take(10)">
+    <Columns>
+        <Column T="Participant" Field="Name" />
+        <Column T="Participant" Field="Type" />
+    </Columns>
+</MudDataGrid>
+
+@code {
+    private IEnumerable<Participant> Participants = new List<Participant>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Participants = await participantService.GetAll();
+    }
+}
