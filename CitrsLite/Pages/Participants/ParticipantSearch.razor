@@ -1,0 +1,47 @@
+﻿@page "/participant/search"
+@inject CitrsLite.Business.Services.ParticipantService participantService
+@using CitrsLite.Data.Models
+
+<MudDataGrid T="Participant" Items="@Participants" SortMode="SortMode.Multiple" Filterable="true" 
+    QuickFilter="@_quickFilter" Hideable="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">List of Participants</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true" 
+            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <Columns>
+        <Column T="Participant" Field="Name" />
+        <Column T="Participant" Field="Type" />
+        <Column T="Participant" Field="City" />
+        <Column T="Participant" Field="Description" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="Participant" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+    private IEnumerable<Participant> Participants = new List<Participant>();
+    private string _searchString;
+    private bool _sortNameByLength;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Participants = await participantService.GetListAsync();
+    }
+
+    private Func<Participant, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{x.PhoneNumber} {x.Type} {x.Address} {x.Id} {x.City} {x.State} {x.Description}".Contains(_searchString))
+            return true;
+
+        return false;
+    };
+}

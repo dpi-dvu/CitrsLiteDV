@@ -3,6 +3,7 @@ using CitrsLite.Business.ViewModels.ParticipantViewModels;
 using CitrsLite.Data.Models;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,13 +47,23 @@ namespace CitrsLite.Business.Services
             
         }
 
-        public async void CreateAysnc(ParticipantFormViewModel formModel)
+        public async void CreateAsync(ParticipantFormViewModel formModel)
         {
             Participant participant = GetParticipant(formModel);
 
             await _data.Participants.CreateAsync(participant);
 
             await _data.SaveChangesAsync();
+        }
+
+        public IEnumerable<Participant> GetList()
+        {
+            return _data.Participants.GetList();
+        }
+
+        public async Task<IEnumerable<Participant>> GetListAsync()
+        { 
+            return await _data.Participants.GetListAsync();
         }
     }
 }
