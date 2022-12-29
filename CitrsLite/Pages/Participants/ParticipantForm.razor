@@ -37,7 +37,7 @@
                     <MudSelect T="string" Label="Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="Model.Type" For="@(() => Model.Type)">
                         @foreach (var partType in Enum.GetValues(typeof(ParticipantType)))
                         {
-                            <MudSelectItem Value="@partType.ToString()">@partType.ToString()?.Replace("_"," ")</MudSelectItem>
+                            <MudSelectItem Value="@partType.ToString()?.Replace("_"," ")">@partType.ToString()?.Replace("_"," ")</MudSelectItem>
                         }
                     </MudSelect>
                     <MudTextField T="string" Label="Description" Class="mt-3" Variant="Variant.Outlined" Lines="5"
@@ -50,6 +50,7 @@
                 </MudCardContent>
                 <MudCardActions>
                     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mx-2" OnClick="ClearForm">Clear</MudButton>
                 </MudCardActions>
             </MudCard>
         </MudItem>
@@ -57,6 +58,8 @@
 </EditForm>
 
 @code {
+    [Inject]
+    public ParticipantFormViewModel Model { get; set; }
     private bool success;
 
     public void CreateParticipant(EditContext context)
@@ -64,6 +67,7 @@
         participantService.CreateAsync(Model);
         success = true;
         StateHasChanged();
+        ClearForm();
     }
 
     protected override async Task OnInitializedAsync()
@@ -73,6 +77,15 @@
         Model.UserName = authState.User.Identity?.Name ?? "Unknown user";
     }
 
-    [Inject]
-    public ParticipantFormViewModel Model { get; set; }
+    private void ClearForm()
+    {
+        Model.Name = string.Empty;
+        Model.Type = string.Empty;
+        Model.Description = string.Empty;
+        Model.PhoneNumber = string.Empty;
+        Model.Address = string.Empty;
+        Model.City = string.Empty;
+        Model.State = "FL";
+    }
+
 }
