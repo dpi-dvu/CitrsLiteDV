@@ -1,0 +1,43 @@
+﻿@using CitrsLite.Data.Models
+@using CitrsLite.Business.Enums
+@using CitrsLite.Business.ViewModels.ParticipantViewModels
+@inject ISnackbar SnackBar
+@inject CitrsLite.Business.Services.ParticipantService participantService
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3 mb-n1" />
+                Update
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField Value="@Model.Name" Label="Name" />
+        <MudSelect T="string" Label="Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="@Model.Type" For="@(() => Model.Type)">
+            @foreach (var partType in Enum.GetValues(typeof(ParticipantType)))
+            {
+                <MudSelectItem Value="@partType.ToString()?.Replace("_"," ")">@partType.ToString()?.Replace("_"," ")</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Value="@Model.PhoneNumber" Label="Phone Number" />
+        <MudTextField Value="@Model.Address" Label="Address" />
+        <MudTextField Value="@Model.State" Label="State" />
+        <MudTextField Value="@Model.Description" Label="Description" />
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Inject] public ParticipantFormViewModel Model { get; set; }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private void UpdateParticipant()
+    {
+        //Snackbar.Add("Participant Updated", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(Model.Id));
+    }
+}
