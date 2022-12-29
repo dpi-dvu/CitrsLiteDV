@@ -23,7 +23,7 @@
 
 @code {
     private IEnumerable<Participant> Participants = new List<Participant>();
-    private string _searchString;
+    private string? _searchString;
     private bool _sortNameByLength;
 
     protected override async Task OnInitializedAsync()
@@ -39,7 +39,10 @@
         if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if ($"{x.PhoneNumber} {x.Type} {x.Address} {x.Id} {x.City} {x.State} {x.Description}".Contains(_searchString))
+        if (x.Type.ToString().Replace("_", " ").Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{x.PhoneNumber} {x.Address} {x.Id} {x.City} {x.State} {x.Description}".Contains(_searchString))
             return true;
 
         return false;
