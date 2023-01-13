@@ -1,9 +1,11 @@
 ﻿@page "/participant/search"
 @inject CitrsLite.Business.Services.ParticipantService participantService
 @using CitrsLite.Data.Models
+@using CitrsLite.Business.Enums
 
-<MudDataGrid T="Participant" Items="@Participants" SortMode="SortMode.Multiple" Filterable="true" 
-    QuickFilter="@_quickFilter" Hideable="true">
+<MudDataGrid T="Participant" Items="@Participants" ReadOnly="false" SortMode="SortMode.Multiple" Filterable="true" 
+    QuickFilter="@_quickFilter" Hideable="false" EditMode="@DataGridEditMode.Form" 
+    EditTrigger="DataGridEditTrigger.Manual">
     <ToolBarContent>
         <MudText Typo="Typo.h6">List of Participants</MudText>
         <MudSpacer />
@@ -12,9 +14,27 @@
     </ToolBarContent>
     <Columns>
         <Column T="Participant" Field="Name" />
-        <Column T="Participant" Field="Type" />
+        <Column T="Participant" Field="Type">
+            <EditTemplate>
+                <MudSelect Label="Type" @bind-Value="context.Item.Type" Required Margin="@Margin.Dense">
+                    @foreach (var partType in Enum.GetValues(typeof(ParticipantType)))
+                    {
+                        <MudSelectItem Value="@partType.ToString()?.Replace("_"," ")">@partType.ToString()?.Replace("_"," ")</MudSelectItem>
+                    }
+                </MudSelect>
+            </EditTemplate>
+        </Column>
         <Column T="Participant" Field="City" />
-        <Column T="Participant" Field="Description" />
+        <Column T="Participant" Field="Description">
+            <EditTemplate>
+                <MudTextField Label="Description" @bind-Value="context.Item.Description" Lines="5" />
+            </EditTemplate>
+        </Column>
+        <Column T="Participant" CellClass="d-flex justify-end" Sortable="false" Filterable="false">
+            <CellTemplate>
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItem"/>
+            </CellTemplate>
+        </Column>
     </Columns>
     <PagerContent>
         <MudDataGridPager T="Participant" />
