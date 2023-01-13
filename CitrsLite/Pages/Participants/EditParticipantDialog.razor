@@ -24,6 +24,10 @@
         <MudTextField Value="@Model.State" Label="State" />
         <MudTextField Value="@Model.Description" Label="Description" />
     </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="UpdateParticipant">Update Participant</MudButton>
+    </DialogActions>
 </MudDialog>
 
 @code {

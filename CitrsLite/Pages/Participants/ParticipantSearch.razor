@@ -2,8 +2,9 @@
 @inject CitrsLite.Business.Services.ParticipantService participantService
 @using CitrsLite.Data.Models
 
-<MudDataGrid T="Participant" Items="@Participants" SortMode="SortMode.Multiple" Filterable="true" 
-    QuickFilter="@_quickFilter" Hideable="true">
+<MudDataGrid T="Participant" Items="@Participants" ReadOnly="false" SortMode="SortMode.Multiple" Filterable="true" 
+    QuickFilter="@_quickFilter" Hideable="true" EditMode="@DataGridEditMode.Form" 
+    EditTrigger="DataGridEditTrigger.Manual">
     <ToolBarContent>
         <MudText Typo="Typo.h6">List of Participants</MudText>
         <MudSpacer />
@@ -15,6 +16,11 @@
         <Column T="Participant" Field="Type" />
         <Column T="Participant" Field="City" />
         <Column T="Participant" Field="Description" />
+        <Column T="Participant" CellClass="d-flex justify-end">
+            <CellTemplate>
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit"/>
+            </CellTemplate>
+        </Column>
     </Columns>
     <PagerContent>
         <MudDataGridPager T="Participant" />
