@@ -7,8 +7,8 @@
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
 
-<EditForm Model=@Model OnValidSubmit="CreateParticipant">
-<DataAnnotationsValidator />
+<EditForm EditContext="@EC" OnValidSubmit="CreateParticipant">
+    <DataAnnotationsValidator />
     <MudGrid class="py-3" Justify="Justify.Center">
         <MudItem xs="8">
             <MudCard>
@@ -16,7 +16,6 @@
                     <CardHeaderContent>
                         <MudText Typo="Typo.h6" Align="Align.Center">Add Participant</MudText>
                     </CardHeaderContent>
-
                 </MudCardHeader>                    
                 <MudItem>
                     <MudPaper>
@@ -60,32 +59,43 @@
 @code {
     [Inject]
     public ParticipantFormViewModel Model { get; set; }
+    private EditContext EC { get; set; }
     private bool success;
 
     public void CreateParticipant(EditContext context)
     {
-        participantService.CreateAsync(Model);
-        success = true;
-        StateHasChanged();
-        ClearForm();
+        if (EC.Validate() == true)
+        {
+            participantService.CreateAsync(Model);
+            success = true;
+            StateHasChanged();
+            ClearForm();
+        }
+        else
+        {
+            success = false;
+        }
+
     }
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
-
-        Model.UserName = authState.User.Identity?.Name ?? "Unknown user";
+        setUserName();
+        EC = new EditContext(Model);
+        base.OnInitialized();
     }
 
     private void ClearForm()
     {
-        Model.Name = string.Empty;
-        Model.Type = string.Empty;
-        Model.Description = string.Empty;
-        Model.PhoneNumber = string.Empty;
-        Model.Address = string.Empty;
-        Model.City = string.Empty;
-        Model.State = "FL";
+        Model = new ParticipantFormViewModel();
+        setUserName();
+        EC = new EditContext(Model);
+    }
+
+    private async void setUserName()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        Model.UserName = authState.User.Identity?.Name ?? "Unknown user";
     }
 
 }

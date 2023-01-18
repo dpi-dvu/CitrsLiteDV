@@ -66,6 +66,32 @@ namespace CitrsLite.Business.Services
             return await _data.Participants.GetListAsync();
         }
 
-        //public void Update()
+        public void Update(ParticipantFormViewModel model, string userName)
+        {
+            try
+            {
+                Participant participant = _data.Participants.GetFirst(p => p.Id == model.Id);
+
+                participant.Name = model.Name;
+                participant.Type = model.Type;
+                participant.Address = model.Address;
+                participant.PhoneNumber = model.PhoneNumber;
+                participant.City = model.City;
+                participant.State = model.State;
+                participant.Description= model.Description;
+
+                participant.ModificationDate = DateTime.Now;
+                participant.ModifiedBy = userName;
+
+                _data.Participants.Edit(participant);
+                _data.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Update Participant Error");
+                Console.WriteLine(ex.ToString());
+                throw;
+            }
+        }
     }
 }
