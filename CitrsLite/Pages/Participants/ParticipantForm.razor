@@ -31,17 +31,18 @@
                         }
                     </MudPaper>
                 </MudItem>
-                <MudCardContent >
+                <MudCardContent>
                     <MudTextField Label="Name" Class="mt-3" @bind-Value="Model.Name" For="@(() => Model.Name)"
                         Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                    <MudSelect T="string" Label="Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="Model.Type" 
+                    <MudSelect T="string" Class="mt-3" Label="Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="Model.Type" 
                         For="@(() => Model.Type)" Variant="Variant.Outlined" Margin="Margin.Dense">
                         @foreach (var partType in Enum.GetValues(typeof(ParticipantType)))
                         {
                             <MudSelectItem Value="@partType.ToString()?.Replace("_"," ")">@partType.ToString()?.Replace("_"," ")</MudSelectItem>
                         }
                     </MudSelect>
-                    <MudTextField T="string" Label="Description" Class="mt-3" Variant="Variant.Outlined" Lines="5"
+                    <MudTextField T="string" Counter="1000" MaxLength="1000" Immediate="true" Label="Description" 
+                                  Class="mt-3" Variant="Variant.Outlined" Lines="5"
                                   @bind-Value="Model.Description" For="@(() => Model.Description)" Margin="Margin.Dense" />
                     <MudDivider DividerType="DividerType.FullWidth" Class="my-6" />
                     <MudText Typo="Typo.button">Contact Information</MudText>
@@ -49,11 +50,10 @@
                                   Variant="Variant.Outlined" Margin="Margin.Dense" />
                     <MudTextField Label="Address" Class="mt-3" @bind-Value="Model.Address" For="@(() => Model.Address)"
                                   Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    <MudTextField Label="City" Class="mt-3" @bind-Value="Model.City" For="@(() => Model.City)"
+                    <MudTextField Label="City" Class="mt-3 d-inline-flex" @bind-Value="Model.City" For="@(() => Model.City)"
                                   Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    <MudTextField Label="State" Class="mt-3" @bind-Value="Model.State" For="@(() => Model.State)"
+                    <MudTextField Label="State" Class="mt-3 d-inline-flex" @bind-Value="Model.State" For="@(() => Model.State)"
                                   Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    <MudCheckBox Label="Active?" Class="mt-3" @bind-Checked="@Model.IsActive" Color="Color.Primary"></MudCheckBox>
                 </MudCardContent>
                 <MudCardActions>
                     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto rounded-pill">
