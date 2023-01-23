@@ -33,6 +33,7 @@ builder.Services.AddSingleton<ParticipantService, ParticipantService>(p =>
 
 builder.Services.AddScoped<VarietyCloneFormViewModel>();
 builder.Services.AddScoped<ParticipantFormViewModel>();
+builder.Services.AddScoped<ParticipantDetailViewModel>();
 builder.Services.AddMudServices();
 
 var app = builder.Build();

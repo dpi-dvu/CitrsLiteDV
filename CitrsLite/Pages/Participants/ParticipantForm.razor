@@ -7,16 +7,15 @@
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
 
-<EditForm Model=@Model OnValidSubmit="CreateParticipant">
-<DataAnnotationsValidator />
+<EditForm EditContext="@EC" OnValidSubmit="CreateParticipant">
+    <DataAnnotationsValidator />
     <MudGrid class="py-3" Justify="Justify.Center">
-        <MudItem xs="8">
-            <MudCard>
+        <MudItem xs="6">
+            <MudCard Elevation="4">
                 <MudCardHeader>
                     <CardHeaderContent>
                         <MudText Typo="Typo.h6" Align="Align.Center">Add Participant</MudText>
                     </CardHeaderContent>
-
                 </MudCardHeader>                    
                 <MudItem>
                     <MudPaper>
@@ -33,24 +32,36 @@
                     </MudPaper>
                 </MudItem>
                 <MudCardContent>
-                    <MudTextField Label="Name" Class="mt-3" @bind-Value="Model.Name" For="@(() => Model.Name)" />
-                    <MudSelect T="string" Label="Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="Model.Type" For="@(() => Model.Type)">
+                    <MudTextField Label="Name" Class="mt-3" @bind-Value="Model.Name" For="@(() => Model.Name)"
+                        Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                    <MudSelect T="string" Class="mt-3" Label="Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="Model.Type" 
+                        For="@(() => Model.Type)" Variant="Variant.Outlined" Margin="Margin.Dense">
                         @foreach (var partType in Enum.GetValues(typeof(ParticipantType)))
                         {
                             <MudSelectItem Value="@partType.ToString()?.Replace("_"," ")">@partType.ToString()?.Replace("_"," ")</MudSelectItem>
                         }
                     </MudSelect>
-                    <MudTextField T="string" Label="Description" Class="mt-3" Variant="Variant.Outlined" Lines="5"
-                                  @bind-Value="Model.Description" For="@(() => Model.Description)" />
-                    <MudTextField Label="Phone Number" Class="mt-3" @bind-Value="Model.PhoneNumber" For="@(() => Model.PhoneNumber)" />
-                    <MudTextField Label="Address" Class="mt-3" @bind-Value="Model.Address" For="@(() => Model.Address)" />
-                    <MudTextField Label="City" Class="mt-3" @bind-Value="Model.City" For="@(() => Model.City)" />
-                    <MudTextField Label="State" Class="mt-3" @bind-Value="Model.State" For="@(() => Model.State)" />
-                    <MudCheckBox Label="Active?" Class="mt-3" @bind-Checked="@Model.IsActive" Color="Color.Primary"></MudCheckBox>
+                    <MudTextField T="string" Counter="1000" MaxLength="1000" Immediate="true" Label="Description" 
+                                  Class="mt-3" Variant="Variant.Outlined" Lines="5"
+                                  @bind-Value="Model.Description" For="@(() => Model.Description)" Margin="Margin.Dense" />
+                    <MudDivider DividerType="DividerType.FullWidth" Class="my-6" />
+                    <MudText Typo="Typo.button">Contact Information</MudText>
+                    <MudTextField Label="Phone Number" Class="mt-3" @bind-Value="Model.PhoneNumber" For="@(() => Model.PhoneNumber)"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    <MudTextField Label="Address" Class="mt-3" @bind-Value="Model.Address" For="@(() => Model.Address)"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    <MudTextField Label="City" Class="mt-3 d-inline-flex" @bind-Value="Model.City" For="@(() => Model.City)"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    <MudTextField Label="State" Class="mt-3 d-inline-flex" @bind-Value="Model.State" For="@(() => Model.State)"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense" />
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mx-2" OnClick="ClearForm">Clear</MudButton>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto rounded-pill">
+                        <MudIcon Icon="@Icons.Material.Filled.Save" Class="mr-1" />Save
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mx-2 rounded-pill" OnClick="ClearForm">
+                        <MudIcon Icon="@Icons.Material.Filled.Clear" Class="mr-1" />Clear
+                    </MudButton>
                 </MudCardActions>
             </MudCard>
         </MudItem>
@@ -60,32 +71,43 @@
 @code {
     [Inject]
     public ParticipantFormViewModel Model { get; set; }
+    private EditContext EC { get; set; }
     private bool success;
 
     public void CreateParticipant(EditContext context)
     {
-        participantService.CreateAsync(Model);
-        success = true;
-        StateHasChanged();
-        ClearForm();
+        if (EC.Validate() == true)
+        {
+            participantService.CreateAsync(Model);
+            success = true;
+            StateHasChanged();
+            ClearForm();
+        }
+        else
+        {
+            success = false;
+        }
+
     }
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
-
-        Model.UserName = authState.User.Identity?.Name ?? "Unknown user";
+        setUserName();
+        EC = new EditContext(Model);
+        base.OnInitialized();
     }
 
     private void ClearForm()
     {
-        Model.Name = string.Empty;
-        Model.Type = string.Empty;
-        Model.Description = string.Empty;
-        Model.PhoneNumber = string.Empty;
-        Model.Address = string.Empty;
-        Model.City = string.Empty;
-        Model.State = "FL";
+        Model = new ParticipantFormViewModel();
+        setUserName();
+        EC = new EditContext(Model);
+    }
+
+    private async void setUserName()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        Model.UserName = authState.User.Identity?.Name ?? "Unknown user";
     }
 
 }

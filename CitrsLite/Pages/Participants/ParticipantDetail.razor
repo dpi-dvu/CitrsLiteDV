@@ -1,0 +1,63 @@
+﻿@page "/participant/detail/"
+@using CitrsLite.Business.ViewModels.ParticipantViewModels
+@using CitrsLite.Business.Enums
+@inject CitrsLite.Business.Services.ParticipantService participantService
+
+<MudGrid class="py-3" Justify="Justify.Center">
+    <MudItem xs="6">
+        <MudCard Elevation="4">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6" Align="Align.Center">Participant Detail</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTextField Label="Name" Class="mt-3" @bind-Value="Model.Name" For="@(() => Model.Name)"
+                                Variant="Variant.Filled" Margin="Margin.Dense" ReadOnly="true" />
+                <MudTextField Label="Type" @bind-Value="Model.Type" For="@(() => Model.Type)" 
+                                Variant="Variant.Filled" Margin="Margin.Dense" ReadOnly="true"/>
+                <MudTextField T="string" Label="Description" Class="mt-3" Variant="Variant.Filled" Lines="5"
+                                @bind-Value="Model.Description" For="@(() => Model.Description)" Margin="Margin.Dense" 
+                                ReadOnly="true"/>
+                <MudDivider DividerType="DividerType.FullWidth" Class="my-6" />
+                <MudText Typo="Typo.button">Contact Information</MudText>
+                <MudTextField Label="Phone Number" Class="mt-3" @bind-Value="Model.PhoneNumber" For="@(() => Model.PhoneNumber)"
+                                Variant="Variant.Filled" Margin="Margin.Dense" ReadOnly="true"/>
+                <MudTextField Label="Address" Class="mt-3" @bind-Value="Model.Address" For="@(() => Model.Address)"
+                                Variant="Variant.Filled" Margin="Margin.Dense" ReadOnly="true"/>
+                <MudTextField Label="City" Class="mt-3" @bind-Value="Model.City" For="@(() => Model.City)"
+                                Variant="Variant.Filled" Margin="Margin.Dense" ReadOnly="true"/>
+                <MudTextField Label="State" Class="mt-3" @bind-Value="Model.State" For="@(() => Model.State)"
+                                Variant="Variant.Filled" Margin="Margin.Dense" ReadOnly="true"/>
+                <MudCheckBox Label="Active?" Class="mt-3" @bind-Checked="@Model.IsActive" Color="Color.Primary" ReadOnly="true"/>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Warning" Class="ml-auto rounded-pill">
+                    <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-1" />Edit
+                </MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Inject]
+    public ParticipantDetailViewModel Model { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = new ParticipantDetailViewModel
+            {
+                Name = "Farmer Joe Farms",
+                Type = "Nursery",
+                Description = "No Description Provided",
+                PhoneNumber = "352-555-5555",
+                Address = "1800 NW Hwy 44",
+                City = "Ruralsville",
+                State = "FL",
+                IsActive = true
+            };
+        base.OnInitialized();
+    }
+
+}

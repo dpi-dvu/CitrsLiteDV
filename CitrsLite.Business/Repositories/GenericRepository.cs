@@ -96,6 +96,22 @@ namespace CitrsLite.Business.Repositories
             }
         }
 
+        public virtual T GetFirst(Expression<Func<T, bool>> predicate,
+            params string[] inludedProperties)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (inludedProperties != null)
+            {
+                foreach (string includedProperty in inludedProperties)
+                {
+                    query = query.Include(includedProperty);
+                }
+            }
+
+            return query.Where(predicate).ToList<T>().FirstOrDefault();
+        }
+
         /// <summary>
         /// Return First or Default onject in a List.
         /// </summary>

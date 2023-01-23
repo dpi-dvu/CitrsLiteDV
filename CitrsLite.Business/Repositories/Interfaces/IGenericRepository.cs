@@ -32,6 +32,9 @@ namespace CitrsLite.Business.Repositories.Interfaces
         public Task<IList<T>> GetListAsync(Expression<Func<T, bool>>? predicate = null,
             params string[] includedProperties);
 
+        public T GetFirst(Expression<Func<T, bool>> predicate,
+            params string[] inludedProperties);
+
         /// <summary>
         /// Return the First or Default object from a List from the database.
         /// </summary>
