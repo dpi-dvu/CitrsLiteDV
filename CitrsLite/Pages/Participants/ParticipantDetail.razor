@@ -1,7 +1,8 @@
-﻿@page "/participant/detail/"
+﻿@page "/participant/detail/{Id:int}" 
 @using CitrsLite.Business.ViewModels.ParticipantViewModels
 @using CitrsLite.Business.Enums
 @inject CitrsLite.Business.Services.ParticipantService participantService
+@inject NavigationManager NavigationManager
 
 <MudGrid class="py-3" Justify="Justify.Center">
     <MudItem xs="6">
@@ -32,6 +33,12 @@
                 <MudCheckBox Label="Active?" Class="mt-3" @bind-Checked="@Model.IsActive" Color="Color.Primary" ReadOnly="true"/>
             </MudCardContent>
             <MudCardActions>
+                <MudButton Href="/participant/index"
+                           Variant="Variant.Filled"
+                           EndIcon="@Icons.Material.Filled.KeyboardReturn"
+                           Color="Color.Secondary">
+                           Return to Participant List
+                </MudButton>
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Warning" Class="ml-auto rounded-pill">
                     <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-1" />Edit
                 </MudButton>
@@ -43,20 +50,12 @@
 @code {
     [Inject]
     public ParticipantDetailViewModel Model { get; set; }
-
+    [Parameter]
+    public int Id { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        Model = new ParticipantDetailViewModel
-            {
-                Name = "Farmer Joe Farms",
-                Type = "Nursery",
-                Description = "No Description Provided",
-                PhoneNumber = "352-555-5555",
-                Address = "1800 NW Hwy 44",
-                City = "Ruralsville",
-                State = "FL",
-                IsActive = true
-            };
+        Model = participantService.GetParticipant(Id);
+       
         base.OnInitialized();
     }
 

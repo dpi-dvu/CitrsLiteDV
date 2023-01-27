@@ -1,0 +1,20 @@
+﻿@page "/participant/index"
+@inject NavigationManager NavigationManager
+@inject CitrsLite.Business.Services.ParticipantService participantService
+@using CitrsLite.Business.ViewModels.ParticipantViewModels;
+@using CitrsLite.Data.Models
+@using CitrsLite.Business.Enums
+
+<MudGrid Justify="Justify.FlexStart">
+    <MudItem xs="12" sm="4">
+        <ParticipantSearch />
+    </MudItem>
+    <MudItem xs="12" sm="8">
+        <ParticipantList />
+    </MudItem>
+</MudGrid>
+
+
+@code {
+    
+}
