@@ -38,6 +38,23 @@ namespace CitrsLite.Business.Services
             };
         }
 
+        public ParticipantDetailViewModel GetParticipant(int id)
+        {
+            Participant part = _data.Participants.GetFirst(p => p.Id == id);
+
+            return new ParticipantDetailViewModel()
+            {
+                Name = part.Name,
+                Type = part.Type,
+                Description = part.Description ?? "No description given",
+                PhoneNumber = part.PhoneNumber,
+                Address = part.Address,
+                City = part.City,
+                State = part.State,
+                IsActive = part.IsActive
+            };
+        }
+
         public void Create(ParticipantFormViewModel formModel)
         {
             Participant participant = GetParticipant(formModel);
