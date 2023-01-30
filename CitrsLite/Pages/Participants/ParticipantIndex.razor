@@ -7,14 +7,74 @@
 
 <MudGrid Justify="Justify.FlexStart">
     <MudItem xs="12" sm="4">
-        <ParticipantSearch />
+        <MudGrid class="py-3" Justify="Justify.Center">
+            <MudItem xs="12">
+                <MudCard Elevation="4">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6" Align="Align.Center">Participant Search</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudTextField Label="Name" Class="mt-3" @bind-Value="Model.Name" For="@(() => Model.Name)"
+                                      Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        <MudSelect T="string" Class="mt-3" Label="Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="Model.Type"
+                                   For="@(() => Model.Type)" Variant="Variant.Outlined" Margin="Margin.Dense">
+                            @foreach (var partType in Enum.GetValues(typeof(ParticipantType)))
+                            {
+                                <MudSelectItem Value="@partType.ToString()?.Replace("_"," ")">@partType.ToString()?.Replace("_"," ")</MudSelectItem>
+                            }
+                        </MudSelect>
+                        <MudTextField T="string" Counter="1000" MaxLength="1000" Immediate="true" Label="Description"
+                                      Class="mt-3" Variant="Variant.Outlined" Lines="5"
+                                      @bind-Value="Model.Description" For="@(() => Model.Description)" Margin="Margin.Dense" />
+                        <MudDivider DividerType="DividerType.FullWidth" Class="my-6" />
+                        <MudText Typo="Typo.button">Contact Information</MudText>
+                        <MudTextField Label="Phone Number" Class="mt-3" @bind-Value="Model.PhoneNumber" For="@(() => Model.PhoneNumber)"
+                                      Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        <MudTextField Label="Address" Class="mt-3" @bind-Value="Model.Address" For="@(() => Model.Address)"
+                                      Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        <MudTextField Label="City" Class="mt-3" @bind-Value="Model.City" For="@(() => Model.City)"
+                                      Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        <MudTextField Label="State" Class="mt-3" @bind-Value="Model.State" For="@(() => Model.State)"
+                                      Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
+                                   Class="ml-auto rounded-pill" OnClick="() => InitiateSearch(Model)">
+                            <MudIcon Icon="@Icons.Material.Filled.Search" Class="mr-1" />Search
+                        </MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mx-2 rounded-pill"
+                                   OnClick="ClearForm">
+                            <MudIcon Icon="@Icons.Material.Filled.Clear" Class="mr-1" />Clear
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
     </MudItem>
     <MudItem xs="12" sm="8">
-        <ParticipantList />
+        <ParticipantList searchQuery="Model"/>
     </MudItem>
 </MudGrid>
 
 
 @code {
-    
+    [Inject]
+    public ParticipantDetailViewModel Model { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = new ParticipantDetailViewModel();
+    }
+
+    public void InitiateSearch(ParticipantDetailViewModel searchModel)
+    {
+        Model = searchModel;
+    }
+
+    public void ClearForm()
+    {
+        Model = new ParticipantDetailViewModel();
+    }
 }

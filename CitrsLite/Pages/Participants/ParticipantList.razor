@@ -5,13 +5,14 @@
 @using CitrsLite.Business.Enums
 
 <MudTable Class="mt-3" Items="@Participants" Dense="true"
-          Filter="new Func<Participant,bool>(FilterFunc1)">
+          Filter= "new Func<Participant,bool>(FilterFunc1)">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Participant List</MudText>
         <MudSpacer />
-        <MudTextField @bind-Value="searchString1" Placeholder="Quick Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+      @*<MudTextField @bind-Value="searchString1" Placeholder="Quick Search" 
+                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
                       IconSize="Size.Medium" Class="mt-0">
-        </MudTextField>
+        </MudTextField>*@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Name</MudTh>
@@ -42,15 +43,26 @@
     private IEnumerable<Participant> Participants = new List<Participant>();
     private string? searchString1 = "";
     private bool _sortNameByLength;
-    private bool quickSearchUsed = false;
+    [Parameter]
+    public ParticipantDetailViewModel? searchQuery { get; set; }
+    //private bool isQuickSearchUsed = false;
 
     protected override async Task OnInitializedAsync()
     {
         Participants = await participantService.GetListAsync();
     }
 
-    private bool FilterFunc1(Participant participant) => FilterFunc(participant, searchString1);
+    private bool SearchParticipant(Participant participant, ParticipantDetailViewModel searchQuery)
+    {
+        if (searchQuery.Name == null || participant.Name.Contains(searchQuery.Name, StringComparison.OrdinalIgnoreCase))
+            return true;
 
+
+        return false;
+    }
+
+    //private bool FilterFunc1(Participant participant) => FilterFunc2(participant);
+    private bool FilterFunc1(Participant participant) => SearchParticipant(participant, searchQuery);
     private bool FilterFunc(Participant participant, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
