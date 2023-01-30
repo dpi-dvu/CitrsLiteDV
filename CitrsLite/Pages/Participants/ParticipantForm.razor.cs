@@ -8,17 +8,17 @@ namespace CitrsLite.Pages.Participants
     {
         [Inject]
         public ParticipantFormViewModel Model { get; set; }
-        private EditContext EC { get; set; }
+        private EditContext editContext { get; set; }
         private bool success;
 
         public void CreateParticipant(EditContext context)
         {
-            if (EC.Validate() == true)
+            if (editContext.Validate() == true)
             {
                 participantService.CreateAsync(Model);
                 success = true;
                 StateHasChanged();
-                ClearForm();
+                clearForm();
             }
             else
             {
@@ -30,15 +30,15 @@ namespace CitrsLite.Pages.Participants
         protected override async Task OnInitializedAsync()
         {
             setUserName();
-            EC = new EditContext(Model);
+            editContext = new EditContext(Model);
             base.OnInitialized();
         }
 
-        private void ClearForm()
+        private void clearForm()
         {
             Model = new ParticipantFormViewModel();
             setUserName();
-            EC = new EditContext(Model);
+            editContext = new EditContext(Model);
         }
 
         private async void setUserName()
