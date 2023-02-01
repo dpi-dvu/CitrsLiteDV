@@ -56,9 +56,6 @@
         if (searchQuery.Name == null || 
             participant.Name.Contains(searchQuery.Name, StringComparison.OrdinalIgnoreCase))
             return true;
-        if (searchQuery.City == null ||
-            participant.City.Contains(searchQuery.City, StringComparison.OrdinalIgnoreCase))
-            return true;
         return false;
     }
 
