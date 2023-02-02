@@ -9,6 +9,7 @@
   <ItemGroup>
     <Content Remove="Pages\Participants\EditParticipantDialog.razor" />
     <Content Remove="Pages\Participants\ParticipantSearch - Copy.razor" />
+    <Content Remove="wwwroot\Scripts\DownloadWindow.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +29,10 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\css\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Scripts\DownloadWindow.js" />
   </ItemGroup>
 
 </Project>

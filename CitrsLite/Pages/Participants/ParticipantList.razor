@@ -42,7 +42,6 @@
 @code {
     private IEnumerable<Participant> Participants = new List<Participant>();
     private string? searchString1 = "";
-    private bool _sortNameByLength;
     [Parameter]
     public ParticipantDetailViewModel? searchQuery { get; set; }
     //private bool isQuickSearchUsed = false;
@@ -54,10 +53,9 @@
 
     private bool SearchParticipant(Participant participant, ParticipantDetailViewModel searchQuery)
     {
-        if (searchQuery.Name == null || participant.Name.Contains(searchQuery.Name, StringComparison.OrdinalIgnoreCase))
+        if (searchQuery.Name == null || 
+            participant.Name.Contains(searchQuery.Name, StringComparison.OrdinalIgnoreCase))
             return true;
-
-
         return false;
     }
 

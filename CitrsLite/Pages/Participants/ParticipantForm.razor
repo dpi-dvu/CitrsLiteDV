@@ -7,7 +7,7 @@
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
 
-<EditForm EditContext="@EC" OnValidSubmit="CreateParticipant">
+<EditForm EditContext="@editContext" OnValidSubmit="CreateParticipant">
     <DataAnnotationsValidator />
     <MudGrid class="py-3" Justify="Justify.Center">
         <MudItem xs="6">
@@ -59,7 +59,7 @@
                     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto rounded-pill">
                         <MudIcon Icon="@Icons.Material.Filled.Save" Class="mr-1" />Save
                     </MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mx-2 rounded-pill" OnClick="ClearForm">
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mx-2 rounded-pill" OnClick="clearForm">
                         <MudIcon Icon="@Icons.Material.Filled.Clear" Class="mr-1" />Clear
                     </MudButton>
                 </MudCardActions>

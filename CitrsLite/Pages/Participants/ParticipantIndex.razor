@@ -1,9 +1,11 @@
 ﻿@page "/participant/index"
 @inject NavigationManager NavigationManager
 @inject CitrsLite.Business.Services.ParticipantService participantService
+@inject IJSRuntime JS
 @using CitrsLite.Business.ViewModels.ParticipantViewModels;
 @using CitrsLite.Data.Models
 @using CitrsLite.Business.Enums
+@using CitrsLite.Business.DTOs.ParticipantDTOs
 
 <MudGrid Justify="Justify.FlexStart">
     <MudItem xs="12" sm="4">
@@ -44,6 +46,10 @@
                                    Class="ml-auto rounded-pill" OnClick="() => InitiateSearch(Model)">
                             <MudIcon Icon="@Icons.Material.Filled.Search" Class="mr-1" />Search
                         </MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Class="mx-2 rounded-pill"
+                                   OnClick="() => GenerateExcel(Model)">
+                            <MudIcon Icon="@Icons.Custom.FileFormats.FileExcel" Class="mr-1" />Excel
+                        </MudButton>
                         <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mx-2 rounded-pill"
                                    OnClick="ClearForm">
                             <MudIcon Icon="@Icons.Material.Filled.Clear" Class="mr-1" />Clear
@@ -68,6 +74,7 @@
         Model = new ParticipantDetailViewModel();
     }
 
+
     public void InitiateSearch(ParticipantDetailViewModel searchModel)
     {
         Model = searchModel;
@@ -77,4 +84,12 @@
     {
         Model = new ParticipantDetailViewModel();
     }
+
+    public async Task GenerateExcel(ParticipantDetailViewModel searchModel)
+    {
+        string fileName = "participants.xlsx";
+        var fileUrl = $"/participant/excel?Name={searchModel.Name}&Type={searchModel.Type}&Address={searchModel.Address}";
+
+        await JS.InvokeVoidAsync("triggerFileDownload", fileName, fileUrl);
+    }        
 }
