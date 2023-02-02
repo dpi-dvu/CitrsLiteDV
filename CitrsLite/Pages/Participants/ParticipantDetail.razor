@@ -52,11 +52,11 @@
     public ParticipantDetailViewModel Model { get; set; }
     [Parameter]
     public int Id { get; set; }
-    protected override async Task OnInitializedAsync()
+
+    protected override void OnInitialized()
     {
         Model = participantService.GetParticipant(Id);
        
         base.OnInitialized();
     }
-
 }
