@@ -1,6 +1,7 @@
 ﻿using CitrsLite.Business.Repositories;
 using CitrsLite.Business.ViewModels.ParticipantViewModels;
 using CitrsLite.Data.Models;
+using OfficeOpenXml;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 using System.Collections;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CitrsLite.Business.DTOs.ParticipantDTOs;
 
 namespace CitrsLite.Business.Services
 {
@@ -107,6 +109,82 @@ namespace CitrsLite.Business.Services
             {
                 Console.WriteLine("Update Participant Error");
                 Console.WriteLine(ex.ToString());
+                throw;
+            }
+        }
+
+        public IEnumerable<ParticipantExcelDTO> GetParticipantExcelData(ParticipantDetailViewModel request)
+        {
+            try
+            {
+                IEnumerable<Participant> participants = _data.Participants.GetList()
+                    .Where(p => p.Name.Contains(request.Name, StringComparison.OrdinalIgnoreCase));
+                IEnumerable<ParticipantExcelDTO> response = participants
+                    .Select(participant => new ParticipantExcelDTO()
+                    {
+                        Id = participant.Id,
+                        Name = participant.Name,
+                        Type = participant.Type,
+                        Description = participant.Description,
+                        PhoneNumber = participant.PhoneNumber,
+                        Address = participant.Address,
+                        City = participant.City,
+                        State = participant.State,
+                        IsActive = participant.IsActive,
+                    });
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+        }
+
+        public byte[] ParticipantData(IEnumerable<ParticipantExcelDTO> data)
+        {
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    ExcelWorksheet sheet = package.Workbook.Worksheets.Add("Participants");
+
+                    sheet.Cells["A1"].Value = "Participant Id";
+                    sheet.Cells["B1"].Value = "Name";
+                    sheet.Cells["C1"].Value = "Participant Type";
+                    sheet.Cells["D1"].Value = "Description";
+                    sheet.Cells["E1"].Value = "Phone Number";
+                    sheet.Cells["F1"].Value = "Address";
+                    sheet.Cells["G1"].Value = "City";
+                    sheet.Cells["H1"].Value = "State";
+                    sheet.Cells["I1"].Value = "Is Active";
+
+                    int row = 2;
+
+                    foreach (ParticipantExcelDTO participant in data)
+                    {
+                        sheet.Cells[string.Format("A{0}", row)].Value = participant.Id;
+                        sheet.Cells[string.Format("B{0}", row)].Value = participant.Name;
+                        sheet.Cells[string.Format("C{0}", row)].Value = participant.Type;
+                        sheet.Cells[string.Format("D{0}", row)].Value = participant.Description ?? "No Description Provided";
+                        sheet.Cells[string.Format("E{0}", row)].Value = participant.PhoneNumber;
+                        sheet.Cells[string.Format("F{0}", row)].Value = participant.Address;
+                        sheet.Cells[string.Format("G{0}", row)].Value = participant.City;
+                        sheet.Cells[string.Format("H{0}", row)].Value = participant.State;
+                        sheet.Cells[string.Format("I{0}", row)].Value = participant.IsActive ? "Active" : "Inactive";
+
+                        row++;
+                    }
+
+                    sheet.Cells["A:BZ"].AutoFitColumns();
+
+                    return package.GetAsByteArray();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
                 throw;
             }
         }
