@@ -118,8 +118,17 @@ namespace CitrsLite.Business.Services
         {
             try
             {
-                IEnumerable<Participant> participants = _data.Participants.GetList()
+                IEnumerable<Participant> participants;
+
+                if (request.Name == null)
+                {
+                    participants = _data.Participants.GetList(); 
+                } 
+                else
+                {
+                    participants = _data.Participants.GetList()
                     .Where(p => p.Name.Contains(request.Name, StringComparison.OrdinalIgnoreCase));
+                }
                 IEnumerable<ParticipantExcelDTO> response = participants
                     .Select(participant => new ParticipantExcelDTO()
                     {

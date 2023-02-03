@@ -86,6 +86,7 @@
     public async Task GenerateExcel(ParticipantDetailViewModel searchModel)
     {
         string fileName = "participants.xlsx";
+
         var fileUrl = $"/participant/excel?Name={searchModel.Name}&Type={searchModel.Type}&Address={searchModel.Address}";
 
         await JS.InvokeVoidAsync("triggerFileDownload", fileName, fileUrl);
