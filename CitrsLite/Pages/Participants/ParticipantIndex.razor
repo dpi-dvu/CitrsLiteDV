@@ -1,6 +1,7 @@
 ﻿@page "/participant/index"
 @inject NavigationManager NavigationManager
 @inject CitrsLite.Business.Services.ParticipantService participantService
+@inject ParticipantDetailViewModel Model
 @inject IJSRuntime JS
 @using CitrsLite.Business.ViewModels.ParticipantViewModels;
 @using CitrsLite.Data.Models
@@ -66,9 +67,6 @@
 
 
 @code {
-    [Inject]
-    public ParticipantDetailViewModel Model { get; set; }
-
     protected override void OnInitialized()
     {
         Model = new ParticipantDetailViewModel();

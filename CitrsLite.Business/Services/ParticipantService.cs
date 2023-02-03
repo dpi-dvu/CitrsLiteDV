@@ -22,7 +22,7 @@ namespace CitrsLite.Business.Services
             _data= new UnitOfWork(connectionString);
         }
 
-        public Participant GetParticipant(ParticipantFormViewModel formModel)
+        public Participant GetParticipantFromForm(ParticipantFormViewModel formModel)
         {
             return new Participant()
             {
@@ -46,6 +46,7 @@ namespace CitrsLite.Business.Services
 
             return new ParticipantDetailViewModel()
             {
+                Id = part.Id,
                 Name = part.Name,
                 Type = part.Type,
                 Description = part.Description ?? "No description given",
@@ -59,7 +60,7 @@ namespace CitrsLite.Business.Services
 
         public void Create(ParticipantFormViewModel formModel)
         {
-            Participant participant = GetParticipant(formModel);
+            Participant participant = GetParticipantFromForm(formModel);
 
             _data.Participants.Create(participant);
             _data.SaveChanges();
@@ -68,7 +69,7 @@ namespace CitrsLite.Business.Services
 
         public async void CreateAsync(ParticipantFormViewModel formModel)
         {
-            Participant participant = GetParticipant(formModel);
+            Participant participant = GetParticipantFromForm(formModel);
 
             await _data.Participants.CreateAsync(participant);
 
