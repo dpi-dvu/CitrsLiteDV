@@ -2,14 +2,10 @@
 using CitrsLite.Business.ViewModels.ParticipantViewModels;
 using CitrsLite.Data.Models;
 using OfficeOpenXml;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CitrsLite.Business.DTOs.ParticipantDTOs;
+using iText.Kernel.Pdf;
+using iText.Html2pdf;
+
 
 namespace CitrsLite.Business.Services
 {
@@ -196,6 +192,35 @@ namespace CitrsLite.Business.Services
             {
                 Console.WriteLine(ex);
                 throw;
+            }
+        }
+
+        public async Task<byte[]> GetPdfAsync(int id, string path)
+        {
+            Participant participant = await _data.Participants.GetFirstAsync(p => p.Id == id);
+
+            string templateString = "";
+
+            using (StreamReader reader = new StreamReader(path + "/Templates/ParticipantTemplate.html"))
+            {
+                templateString = reader.ReadToEnd();
+            }
+
+            templateString = templateString.Replace("(Name)", participant.Name);
+            templateString = templateString.Replace("(Type)", participant.Type);
+            templateString = templateString.Replace("(Description)", participant.Description ?? "No Description Given");
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                await Task.Run(() =>
+                {
+                    using (PdfWriter pdfWriter = new PdfWriter(stream))
+                    {
+                        HtmlConverter.ConvertToPdf(templateString, pdfWriter);
+                    }
+                });
+
+                return stream.ToArray();
             }
         }
     }

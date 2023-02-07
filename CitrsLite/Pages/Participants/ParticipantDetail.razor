@@ -3,9 +3,10 @@
 @using CitrsLite.Business.Enums
 @inject ParticipantDetailViewModel Model
 @inject CitrsLite.Business.Services.ParticipantService participantService
-@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
 
-<MudGrid class="py-3" Justify="Justify.Center">
+
+<MudGrid class="py-3" id="PartDetail" Justify="Justify.Center">
     <MudItem xs="6">
         <MudCard Elevation="4">
             <MudCardHeader>
@@ -40,12 +41,20 @@
                            Color="Color.Secondary">
                            Return to Participant List
                 </MudButton>
+                
                 <MudButton Href=@("/participant/edit/" + Model.Id) 
                            Variant="Variant.Filled" 
                            EndIcon="@Icons.Material.Filled.Edit"
-                           Color="Color.Warning" 
+                           Color="Color.Warning"
                            Class="ml-auto rounded-pill">
                            Edit
+                </MudButton>
+                <MudButton OnClick="() => getPdfAsync(Model.Id)"
+                           Variant="Variant.Filled"
+                           EndIcon="@Icons.Custom.FileFormats.FilePdf"
+                           Color="Color.Tertiary"
+                           Class="mx-2 rounded-pill">
+                           PDF
                 </MudButton>
             </MudCardActions>
         </MudCard>
@@ -59,7 +68,13 @@
     protected override void OnInitialized()
     {
         Model = participantService.GetParticipant(Id);
-       
         base.OnInitialized();
+    }
+
+    public async Task getPdfAsync(int id)
+    {
+        var fileName = "participant.pdf";
+        var url = $"/participant/pdf/{id}";
+        await JS.InvokeVoidAsync("triggerFileDownload", fileName, url);
     }
 }

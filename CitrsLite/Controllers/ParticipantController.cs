@@ -2,24 +2,25 @@
 using CitrsLite.Business.Services;
 using CitrsLite.Business.ViewModels.ParticipantViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Components;
 
 namespace CitrsLite.Controllers
 {
     public class ParticipantController : Controller
     {
         private ParticipantService participantService;
+        private IWebHostEnvironment appEnvironment;
 
-        public ParticipantController(ParticipantService service)
+        public ParticipantController(ParticipantService service, IWebHostEnvironment environment)
         {
             participantService = service;
+            appEnvironment = environment;
         }
 
-        [Route("participant/excel")]        
-        public IActionResult ParticipantExcel(ParticipantDetailViewModel model)
+        [HttpGet]        
+        public IActionResult Excel(ParticipantDetailViewModel model)
         {
             IEnumerable<ParticipantExcelDTO> data = participantService.GetParticipantExcelData(model);
-
-            Response.Clear();
 
             byte[] excelData = participantService.ParticipantData(data);
 
@@ -28,6 +29,14 @@ namespace CitrsLite.Controllers
             string fileName = "participants.xlsx";
 
             return File(excelData, contentType, fileName);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Pdf(int id)
+        {
+            byte[] pdfData = await participantService.GetPdfAsync(id, appEnvironment.WebRootPath);
+
+            return File(pdfData, "application/pdf", "participant.pdf");
         }
     }
 }

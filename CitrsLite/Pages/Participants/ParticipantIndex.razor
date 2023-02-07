@@ -48,7 +48,7 @@
                             <MudIcon Icon="@Icons.Material.Filled.Search" Class="mr-1" />Search
                         </MudButton>
                         <MudButton Variant="Variant.Filled" Color="Color.Secondary" Class="mx-2 rounded-pill"
-                                   OnClick="() => GenerateExcel(Model)">
+                                   OnClick="() => getExcel(Model)">
                             <MudIcon Icon="@Icons.Custom.FileFormats.FileExcel" Class="mr-1" />Excel
                         </MudButton>
                         <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mx-2 rounded-pill"
@@ -72,7 +72,6 @@
         Model = new ParticipantDetailViewModel();
     }
 
-
     public void InitiateSearch(ParticipantDetailViewModel searchModel)
     {
         Model = searchModel;
@@ -83,7 +82,7 @@
         Model = new ParticipantDetailViewModel();
     }
 
-    public async Task GenerateExcel(ParticipantDetailViewModel searchModel)
+    public async Task getExcel(ParticipantDetailViewModel searchModel)
     {
         string fileName = "participants.xlsx";
 
