@@ -1,4 +1,4 @@
-﻿@page "/participant/add"
+﻿@page "/participant/edit/{Id:int}"
 @inject CitrsLite.Business.Services.ParticipantService participantService
 @inject AuthenticationStateProvider authenticationStateProvider
 @using CitrsLite.Business.ViewModels.ParticipantViewModels
@@ -7,16 +7,16 @@
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
 
-<EditForm EditContext="@editContext" OnValidSubmit="CreateParticipant">
+<EditForm EditContext="@editContext" OnValidSubmit="UpdateParticipant">
     <DataAnnotationsValidator />
     <MudGrid class="py-3" Justify="Justify.Center">
         <MudItem xs="6">
             <MudCard Elevation="4">
                 <MudCardHeader>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.h6" Align="Align.Center">Add Participant</MudText>
+                        <MudText Typo="Typo.h6" Align="Align.Center">Edit Participant</MudText>
                     </CardHeaderContent>
-                </MudCardHeader>                    
+                </MudCardHeader>
                 <MudItem>
                     <MudPaper>
                         @if (success)
@@ -33,15 +33,15 @@
                 </MudItem>
                 <MudCardContent>
                     <MudTextField Label="Name" Class="mt-3" @bind-Value="Model.Name" For="@(() => Model.Name)"
-                        Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                    <MudSelect T="string" Class="mt-3" Label="Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="Model.Type" 
-                        For="@(() => Model.Type)" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                  Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    <MudSelect T="string" Class="mt-3" Label="Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="Model.Type"
+                               For="@(() => Model.Type)" Variant="Variant.Outlined" Margin="Margin.Dense">
                         @foreach (var partType in Enum.GetValues(typeof(ParticipantType)))
                         {
                             <MudSelectItem Value="@partType.ToString()?.Replace("_"," ")">@partType.ToString()?.Replace("_"," ")</MudSelectItem>
                         }
                     </MudSelect>
-                    <MudTextField T="string" Counter="1000" MaxLength="1000" Immediate="true" Label="Description" 
+                    <MudTextField T="string" Counter="1000" MaxLength="1000" Immediate="true" Label="Description"
                                   Class="mt-3" Variant="Variant.Outlined" Lines="5"
                                   @bind-Value="Model.Description" For="@(() => Model.Description)" Margin="Margin.Dense" />
                     <MudDivider DividerType="DividerType.FullWidth" Class="my-6" />
@@ -56,11 +56,23 @@
                                   Variant="Variant.Outlined" Margin="Margin.Dense" />
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto rounded-pill">
-                        <MudIcon Icon="@Icons.Material.Filled.Save" Class="mr-1" />Save
+                    <MudButton Href="/participant/index"
+                               Variant="Variant.Filled"
+                               EndIcon="@Icons.Material.Filled.KeyboardReturn"
+                               Color="Color.Secondary">
+                        Return to Participant List
                     </MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mx-2 rounded-pill" OnClick="clearForm">
-                        <MudIcon Icon="@Icons.Material.Filled.Clear" Class="mr-1" />Clear
+                    <MudButton ButtonType="ButtonType.Submit" 
+                               Variant="Variant.Filled" 
+                               Color="Color.Primary" 
+                               Class="ml-auto rounded-pill">
+                        <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-1" />Edit
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" 
+                               Color="Color.Error" 
+                               Class="mx-2 rounded-pill" 
+                               OnClick="resetForm">
+                        <MudIcon Icon="@Icons.Material.Filled.Undo" Class="mr-1" />Reset
                     </MudButton>
                 </MudCardActions>
             </MudCard>

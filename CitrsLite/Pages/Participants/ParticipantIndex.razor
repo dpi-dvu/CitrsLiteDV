@@ -1,6 +1,7 @@
 ﻿@page "/participant/index"
 @inject NavigationManager NavigationManager
 @inject CitrsLite.Business.Services.ParticipantService participantService
+@inject ParticipantDetailViewModel Model
 @inject IJSRuntime JS
 @using CitrsLite.Business.ViewModels.ParticipantViewModels;
 @using CitrsLite.Data.Models
@@ -47,7 +48,7 @@
                             <MudIcon Icon="@Icons.Material.Filled.Search" Class="mr-1" />Search
                         </MudButton>
                         <MudButton Variant="Variant.Filled" Color="Color.Secondary" Class="mx-2 rounded-pill"
-                                   OnClick="() => GenerateExcel(Model)">
+                                   OnClick="() => getExcel(Model)">
                             <MudIcon Icon="@Icons.Custom.FileFormats.FileExcel" Class="mr-1" />Excel
                         </MudButton>
                         <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mx-2 rounded-pill"
@@ -66,14 +67,10 @@
 
 
 @code {
-    [Inject]
-    public ParticipantDetailViewModel Model { get; set; }
-
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         Model = new ParticipantDetailViewModel();
     }
-
 
     public void InitiateSearch(ParticipantDetailViewModel searchModel)
     {
@@ -85,9 +82,10 @@
         Model = new ParticipantDetailViewModel();
     }
 
-    public async Task GenerateExcel(ParticipantDetailViewModel searchModel)
+    public async Task getExcel(ParticipantDetailViewModel searchModel)
     {
         string fileName = "participants.xlsx";
+
         var fileUrl = $"/participant/excel?Name={searchModel.Name}&Type={searchModel.Type}&Address={searchModel.Address}";
 
         await JS.InvokeVoidAsync("triggerFileDownload", fileName, fileUrl);

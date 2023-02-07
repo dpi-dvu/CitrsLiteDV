@@ -2,14 +2,10 @@
 using CitrsLite.Business.ViewModels.ParticipantViewModels;
 using CitrsLite.Data.Models;
 using OfficeOpenXml;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CitrsLite.Business.DTOs.ParticipantDTOs;
+using iText.Kernel.Pdf;
+using iText.Html2pdf;
+
 
 namespace CitrsLite.Business.Services
 {
@@ -22,7 +18,7 @@ namespace CitrsLite.Business.Services
             _data= new UnitOfWork(connectionString);
         }
 
-        public Participant GetParticipant(ParticipantFormViewModel formModel)
+        public Participant GetParticipantFromForm(ParticipantFormViewModel formModel)
         {
             return new Participant()
             {
@@ -46,6 +42,7 @@ namespace CitrsLite.Business.Services
 
             return new ParticipantDetailViewModel()
             {
+                Id = part.Id,
                 Name = part.Name,
                 Type = part.Type,
                 Description = part.Description ?? "No description given",
@@ -59,7 +56,7 @@ namespace CitrsLite.Business.Services
 
         public void Create(ParticipantFormViewModel formModel)
         {
-            Participant participant = GetParticipant(formModel);
+            Participant participant = GetParticipantFromForm(formModel);
 
             _data.Participants.Create(participant);
             _data.SaveChanges();
@@ -68,7 +65,7 @@ namespace CitrsLite.Business.Services
 
         public async void CreateAsync(ParticipantFormViewModel formModel)
         {
-            Participant participant = GetParticipant(formModel);
+            Participant participant = GetParticipantFromForm(formModel);
 
             await _data.Participants.CreateAsync(participant);
 
@@ -117,8 +114,17 @@ namespace CitrsLite.Business.Services
         {
             try
             {
-                IEnumerable<Participant> participants = _data.Participants.GetList()
+                IEnumerable<Participant> participants;
+
+                if (request.Name == null)
+                {
+                    participants = _data.Participants.GetList(); 
+                } 
+                else
+                {
+                    participants = _data.Participants.GetList()
                     .Where(p => p.Name.Contains(request.Name, StringComparison.OrdinalIgnoreCase));
+                }
                 IEnumerable<ParticipantExcelDTO> response = participants
                     .Select(participant => new ParticipantExcelDTO()
                     {
@@ -186,6 +192,35 @@ namespace CitrsLite.Business.Services
             {
                 Console.WriteLine(ex);
                 throw;
+            }
+        }
+
+        public async Task<byte[]> GetPdfAsync(int id, string path)
+        {
+            Participant participant = await _data.Participants.GetFirstAsync(p => p.Id == id);
+
+            string templateString = "";
+
+            using (StreamReader reader = new StreamReader(path + "/Templates/ParticipantTemplate.html"))
+            {
+                templateString = reader.ReadToEnd();
+            }
+
+            templateString = templateString.Replace("(Name)", participant.Name);
+            templateString = templateString.Replace("(Type)", participant.Type);
+            templateString = templateString.Replace("(Description)", participant.Description ?? "No Description Given");
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                await Task.Run(() =>
+                {
+                    using (PdfWriter pdfWriter = new PdfWriter(stream))
+                    {
+                        HtmlConverter.ConvertToPdf(templateString, pdfWriter);
+                    }
+                });
+
+                return stream.ToArray();
             }
         }
     }

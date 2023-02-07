@@ -8,17 +8,17 @@ namespace CitrsLite.Pages.Participants
     {
         [Inject]
         public ParticipantFormViewModel Model { get; set; }
-        private EditContext editContext { get; set; }
+        private EditContext? editContext { get; set; }
         private bool success;
 
-        public void CreateParticipant(EditContext context)
+        public async Task CreateParticipant(EditContext context)
         {
-            if (editContext.Validate() == true)
+            if (editContext?.Validate() == true)
             {
                 participantService.CreateAsync(Model);
                 success = true;
                 StateHasChanged();
-                clearForm();
+                await clearForm();
             }
             else
             {
@@ -29,19 +29,19 @@ namespace CitrsLite.Pages.Participants
 
         protected override async Task OnInitializedAsync()
         {
-            setUserName();
+            await setUserName();
             editContext = new EditContext(Model);
             base.OnInitialized();
         }
 
-        private void clearForm()
+        private async Task clearForm()
         {
             Model = new ParticipantFormViewModel();
-            setUserName();
+            await setUserName();
             editContext = new EditContext(Model);
         }
 
-        private async void setUserName()
+        private async Task setUserName()
         {
             var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
             Model.UserName = authState.User.Identity?.Name ?? "Unknown user";

@@ -9,10 +9,6 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">Participant List</MudText>
         <MudSpacer />
-      @*<MudTextField @bind-Value="searchString1" Placeholder="Quick Search" 
-                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
-                      IconSize="Size.Medium" Class="mt-0">
-        </MudTextField>*@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Name</MudTh>
@@ -44,33 +40,18 @@
     private string? searchString1 = "";
     [Parameter]
     public ParticipantDetailViewModel? searchQuery { get; set; }
-    //private bool isQuickSearchUsed = false;
 
     protected override async Task OnInitializedAsync()
     {
         Participants = await participantService.GetListAsync();
     }
 
+    private bool FilterFunc1(Participant participant) => SearchParticipant(participant, searchQuery);
+
     private bool SearchParticipant(Participant participant, ParticipantDetailViewModel searchQuery)
     {
         if (searchQuery.Name == null || 
             participant.Name.Contains(searchQuery.Name, StringComparison.OrdinalIgnoreCase))
-            return true;
-        return false;
-    }
-
-    //private bool FilterFunc1(Participant participant) => FilterFunc2(participant);
-    private bool FilterFunc1(Participant participant) => SearchParticipant(participant, searchQuery);
-    private bool FilterFunc(Participant participant, string searchString)
-    {
-        if (string.IsNullOrWhiteSpace(searchString))
-            return true;
-        if (participant.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        if (participant.Type.ToString().Replace("_", " ").Contains(searchString, StringComparison.CurrentCultureIgnoreCase))
-            return true;
-        if ($"{participant.PhoneNumber} {participant.Address} {participant.Id} {participant.City} {participant.State} {participant.Description}"
-            .Contains(searchString))
             return true;
         return false;
     }
