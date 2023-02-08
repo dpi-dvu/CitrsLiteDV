@@ -25,6 +25,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddSingleton<EmailService>();
 
 builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>(u => 
     new UnitOfWork(connectionString: builder.Configuration.GetConnectionString("CitrsDatabase")));
