@@ -41,8 +41,8 @@ namespace CitrsLite.Business.Services
                             pdfWriter.IsCloseStream();
                             pdfWriter.SetCloseStream(false);
                             HtmlConverter.ConvertToPdf(template, pdfWriter);
-                            message.Attachments.Add(new Attachment(stream, "participant.pdf"));
-
+                            byte[] document = stream.ToArray();
+                            message.Attachments.Add(new Attachment(new MemoryStream(document), "participant.pdf", "application/pdf"));
                             SmtpClient client = new SmtpClient("relay.freshfromflorida.com", 25);
                             client.Send(message);
                         }
