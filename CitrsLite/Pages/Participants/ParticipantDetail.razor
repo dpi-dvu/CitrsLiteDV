@@ -3,6 +3,8 @@
 @using CitrsLite.Business.Enums
 @inject ParticipantDetailViewModel Model
 @inject CitrsLite.Business.Services.ParticipantService participantService
+@inject CitrsLite.Business.Services.EmailService emailService
+@inject IWebHostEnvironment WebEnvironment
 @inject IJSRuntime JS
 
 
@@ -39,7 +41,7 @@
                            Variant="Variant.Filled"
                            EndIcon="@Icons.Material.Filled.KeyboardReturn"
                            Color="Color.Secondary">
-                           Return to Participant List
+                           Return to List
                 </MudButton>
                 
                 <MudButton Href=@("/participant/edit/" + Model.Id) 
@@ -55,6 +57,13 @@
                            Color="Color.Tertiary"
                            Class="mx-2 rounded-pill">
                            PDF
+                </MudButton>
+                <MudButton OnClick="() => EmailAsync(Model.Id)"
+                           Variant="Variant.Filled"
+                           EndIcon="@Icons.Material.Filled.Email"
+                           Color="Color.Primary"
+                           Class="mx-2 rounded-pill">
+                           Email
                 </MudButton>
             </MudCardActions>
         </MudCard>
@@ -76,5 +85,10 @@
         var fileName = "participant.pdf";
         var url = $"/participant/pdf/{id}";
         await JS.InvokeVoidAsync("triggerFileDownload", fileName, url);
+    }
+
+    public async Task EmailAsync(int id)
+    {
+        await emailService.EmailAsync(id, WebEnvironment.WebRootPath);
     }
 }

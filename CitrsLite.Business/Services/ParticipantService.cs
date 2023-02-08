@@ -197,18 +197,7 @@ namespace CitrsLite.Business.Services
 
         public async Task<byte[]> GetPdfAsync(int id, string path)
         {
-            Participant participant = await _data.Participants.GetFirstAsync(p => p.Id == id);
-
-            string templateString = "";
-
-            using (StreamReader reader = new StreamReader(path + "/Templates/ParticipantTemplate.html"))
-            {
-                templateString = reader.ReadToEnd();
-            }
-
-            templateString = templateString.Replace("(Name)", participant.Name);
-            templateString = templateString.Replace("(Type)", participant.Type);
-            templateString = templateString.Replace("(Description)", participant.Description ?? "No Description Given");
+            string templateString = await GetTemplateAsync(id, path);
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -222,6 +211,24 @@ namespace CitrsLite.Business.Services
 
                 return stream.ToArray();
             }
+        }
+
+        public async Task<string> GetTemplateAsync(int id, string path)
+        {
+            Participant participant = await _data.Participants.GetFirstAsync(p => p.Id == id);
+
+            string templateString = "";
+
+            using (StreamReader reader = new StreamReader(path + "/Templates/ParticipantTemplate.html"))
+            {
+                templateString = reader.ReadToEnd();
+            }
+
+            templateString = templateString.Replace("(Name)", participant.Name);
+            templateString = templateString.Replace("(Type)", participant.Type);
+            templateString = templateString.Replace("(Description)", participant.Description ?? "No Description Given");
+
+            return templateString;
         }
     }
 }
