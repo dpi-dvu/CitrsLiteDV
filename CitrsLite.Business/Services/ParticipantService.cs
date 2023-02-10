@@ -230,5 +230,16 @@ namespace CitrsLite.Business.Services
 
             return templateString;
         }
+
+        public double[] GetChartData()
+        {
+            int govtCount = _data.Participants.GetList().Where(p => p.Type.Equals("Government_Office")).Count();
+            int nurseryCount = _data.Participants.GetList().Where(p => p.Type.Equals("Nursery")).Count();
+            int researchCount = _data.Participants.GetList().Where(p => p.Type.Equals("Research_Institute")).Count();
+            int collectorCount = _data.Participants.GetList().Where(p => p.Type.Equals("Source_Tree_Collector")).Count();
+            double[] data = { govtCount, nurseryCount, researchCount, collectorCount };
+
+            return data;
+        }
     }
 }
