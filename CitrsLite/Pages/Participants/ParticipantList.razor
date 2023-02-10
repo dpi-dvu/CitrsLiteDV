@@ -18,7 +18,9 @@
         <MudTh>Details</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Name">
+            <MudHighlighter Text="@context.Name" HighlightedText="@searchQuery?.Name" />
+        </MudTd>
         <MudTd DataLabel="Type">@context.Type</MudTd>
         <MudTd DataLabel="City">@context.City</MudTd>
         <MudTd DataLabel="Description">@context.Description</MudTd>
@@ -37,7 +39,6 @@
 
 @code {
     private IEnumerable<Participant> Participants = new List<Participant>();
-    private string? searchString1 = "";
     [Parameter]
     public ParticipantDetailViewModel? searchQuery { get; set; }
 
