@@ -6,7 +6,7 @@
 @inject CitrsLite.Business.Services.EmailService emailService
 @inject IWebHostEnvironment WebEnvironment
 @inject IJSRuntime JS
-
+@inject ISnackbar SnackbarService
 
 <MudGrid class="py-3" id="PartDetail" Justify="Justify.Center">
     <MudItem xs="6">
@@ -94,5 +94,6 @@
     public async Task EmailAsync(int id)
     {
         await emailService.EmailAsync(id, WebEnvironment.WebRootPath);
+        SnackbarService.Add("Email was sent", Severity.Info);
     }
 }
