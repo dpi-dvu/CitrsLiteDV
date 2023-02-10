@@ -47,6 +47,7 @@
                 <MudButton Href=@("/participant/edit/" + Model.Id) 
                            Variant="Variant.Filled" 
                            EndIcon="@Icons.Material.Filled.Edit"
+                           Style="color: black"
                            Color="Color.Warning"
                            Class="ml-auto rounded-pill">
                            Edit
@@ -54,6 +55,7 @@
                 <MudButton OnClick="() => getPdfAsync(Model.Id)"
                            Variant="Variant.Filled"
                            EndIcon="@Icons.Custom.FileFormats.FilePdf"
+                           Style="color: black"
                            Color="Color.Tertiary"
                            Class="mx-2 rounded-pill">
                            PDF
@@ -61,6 +63,7 @@
                 <MudButton OnClick="() => EmailAsync(Model.Id)"
                            Variant="Variant.Filled"
                            EndIcon="@Icons.Material.Filled.Email"
+                           Style="color: black"
                            Color="Color.Primary"
                            Class="mx-2 rounded-pill">
                            Email
