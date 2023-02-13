@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 <PageTitle>CitrsLite</PageTitle>
-<MudThemeProvider Theme="CustomTheme"/>
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="CustomTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -13,6 +13,12 @@
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Color="Color.Secondary">
         <NavMenu />
+        <MudContainer Style="text-align: center" Class="mt-2">
+            <MudToggleIconButton @bind-Toggled="@_isDarkMode"
+                                 Icon="@Icons.Material.Filled.DarkMode" Title="Dark Mode"
+                                 ToggledIcon="@Icons.Material.Filled.LightMode" ToggledTitle="Light Mode" />
+            <span>@(_isDarkMode ? "Light Mode" : "Dark Mode")</span>
+        </MudContainer>
     </MudDrawer>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Large">
@@ -23,7 +29,7 @@
 
 @code {
     bool _drawerOpen = true;
-
+    private bool _isDarkMode;
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
@@ -42,7 +48,7 @@
             LayoutProperties = new LayoutProperties()
             {
                 DrawerWidthLeft = "260px",
-                DrawerWidthRight = "300px"
+                DrawerWidthRight = "260px"
             }
         };
 }
