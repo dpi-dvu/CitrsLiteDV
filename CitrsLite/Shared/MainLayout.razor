@@ -7,7 +7,7 @@
 
 <MudLayout>
     <MudAppBar Color="Color.Inherit">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Dark" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
         <LoginDisplay />
     </MudAppBar>
@@ -42,13 +42,20 @@
                 Primary = Colors.Blue.Default,
                 Secondary = Colors.Green.Darken1,
                 AppbarBackground = Colors.Orange.Default,
-                Background = Colors.Amber.Lighten5
+                Background = Colors.Amber.Lighten5,
+                AppbarText = Colors.Shades.Black,
+                Divider = Colors.Shades.Black
             },
-
+            PaletteDark = new PaletteDark()
+            {
+                Secondary = Colors.Green.Darken2,
+                AppbarBackground = Colors.Orange.Darken3
+            },
             LayoutProperties = new LayoutProperties()
             {
                 DrawerWidthLeft = "260px",
-                DrawerWidthRight = "260px"
+                DrawerWidthRight = "300px"
+
             }
         };
 }
