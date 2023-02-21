@@ -4,7 +4,7 @@
 @using CitrsLite.Data.Models
 @using CitrsLite.Business.Enums
 
-<MudTable Class="mt-3" Items="@Participants" Dense="true"
+<MudTable Class="mt-3" Items="@Participants" Dense="true" FixedHeader="true" FixedFooter="true"
           Filter= "new Func<Participant,bool>(FilterFunc1)">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Participant List</MudText>
@@ -14,7 +14,6 @@
         <MudTh>Name</MudTh>
         <MudTh>Type</MudTh>
         <MudTh>City</MudTh>
-        <MudTh>Description</MudTh>
         <MudTh>Details</MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -23,7 +22,6 @@
         </MudTd>
         <MudTd DataLabel="Type">@context.Type</MudTd>
         <MudTd DataLabel="City">@context.City</MudTd>
-        <MudTd DataLabel="Description">@context.Description</MudTd>
         <MudTd DataLabel="Details">
             <MudButton Href=@("/participant/detail/" + context.Id.ToString())
                        Variant="Variant.Text"

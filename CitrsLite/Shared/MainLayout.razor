@@ -1,18 +1,24 @@
 ﻿@inherits LayoutComponentBase
 
 <PageTitle>CitrsLite</PageTitle>
-<MudThemeProvider Theme="CustomTheme"/>
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="CustomTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
     <MudAppBar Color="Color.Inherit">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Dark" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
         <LoginDisplay />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Color="Color.Secondary">
         <NavMenu />
+        <MudContainer Style="text-align: center" Class="mt-2">
+            <MudToggleIconButton @bind-Toggled="@_isDarkMode"
+                                 Icon="@Icons.Material.Filled.DarkMode" Title="Dark Mode"
+                                 ToggledIcon="@Icons.Material.Filled.LightMode" ToggledTitle="Light Mode" />
+            <span>@(_isDarkMode ? "Light Mode" : "Dark Mode")</span>
+        </MudContainer>
     </MudDrawer>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Large">
@@ -23,7 +29,7 @@
 
 @code {
     bool _drawerOpen = true;
-
+    private bool _isDarkMode;
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
@@ -36,13 +42,20 @@
                 Primary = Colors.Blue.Default,
                 Secondary = Colors.Green.Darken1,
                 AppbarBackground = Colors.Orange.Default,
-                Background = Colors.Amber.Lighten5
+                Background = Colors.Amber.Lighten5,
+                AppbarText = Colors.Shades.Black,
+                Divider = Colors.Shades.Black
             },
-
+            PaletteDark = new PaletteDark()
+            {
+                Secondary = Colors.Green.Darken2,
+                AppbarBackground = Colors.Orange.Darken3
+            },
             LayoutProperties = new LayoutProperties()
             {
                 DrawerWidthLeft = "260px",
                 DrawerWidthRight = "300px"
+
             }
         };
 }
