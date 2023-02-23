@@ -4,8 +4,12 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using iText.Html2pdf;
 using iText.Kernel.Pdf;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace CitrsLite.Business.Services
 {
@@ -48,6 +52,30 @@ namespace CitrsLite.Business.Services
                         }
                     });
                 }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task OpenOutlookAsync(int participantId, string userName, string path)
+        {
+            try
+            {
+                string template = await _participantService.GetTemplateAsync(participantId, path);
+
+                Outlook.Application application = new Outlook.Application();
+                Outlook.MailItem mailItem = (Outlook.MailItem)application.CreateItem(Outlook.OlItemType.olMailItem);
+
+                mailItem.Subject = "Participant Detail with Attachment";
+                mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatHTML;
+                mailItem.HTMLBody = template;
+
+                byte[] pdf = await _participantService.GetPdfAsync(participantId, path);
+                
+                mailItem.Attachments.Add("C:/Users/vud/Downloads/participant-1.pdf", Outlook.OlAttachmentType.olByValue, Type.Missing, Type.Missing);
+                mailItem.Display(false);
             }
             catch (Exception ex)
             {

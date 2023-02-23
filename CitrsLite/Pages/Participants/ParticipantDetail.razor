@@ -1,6 +1,8 @@
 ﻿@page "/participant/detail/{Id:int}" 
 @using CitrsLite.Business.ViewModels.ParticipantViewModels
 @using CitrsLite.Business.Enums
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider authenticationStateProvider
 @inject ParticipantDetailViewModel Model
 @inject CitrsLite.Business.Services.ParticipantService participantService
 @inject CitrsLite.Business.Services.EmailService emailService
@@ -69,6 +71,9 @@
                            Class="mx-2 rounded-pill">
                            Email
                 </MudButton>
+                <MudButton OnClick="() => OpenOutlookAsync(Model.Id)">  
+                    Open Outlook to Email
+                </MudButton>
             </MudCardActions>
         </MudCard>
     </MudItem>
@@ -95,5 +100,19 @@
     {
         await emailService.EmailAsync(id, WebEnvironment.WebRootPath);
         SnackbarService.Add("Email was sent", Severity.Info);
+    }
+
+    public async Task OpenOutlookAsync(int id)
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        Model.UserName = authState.User.Identity?.Name ?? "Unknown user";
+        await emailService.OpenOutlookAsync(id, Model.UserName, WebEnvironment.WebRootPath);
+        SnackbarService.Add("Outlook is opening...", Severity.Info);
+    }
+
+    private async Task setUserName()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        Model.UserName = authState.User.Identity?.Name ?? "Unknown user";
     }
 }
