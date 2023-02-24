@@ -16,10 +16,12 @@ namespace CitrsLite.Business.Services
     public class EmailService
     {
         private ParticipantService _participantService;
+        private UserService _userService;
         
-        public EmailService(ParticipantService participantService) 
+        public EmailService(ParticipantService participantService, UserService userService) 
         { 
             _participantService = participantService;
+            _userService = userService;
         }
 
         public async Task EmailAsync(int participantId, string path)
@@ -72,9 +74,10 @@ namespace CitrsLite.Business.Services
                 mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatHTML;
                 mailItem.HTMLBody = template;
 
-                byte[] pdf = await _participantService.GetPdfAsync(participantId, path);
-                
-                mailItem.Attachments.Add("C:/Users/vud/Downloads/participant-1.pdf", Outlook.OlAttachmentType.olByValue, Type.Missing, Type.Missing);
+                //byte[] pdf = await _participantService.GetPdfAsync(participantId, path);
+
+                userName = _userService.shortenUserName(userName);
+                mailItem.Attachments.Add($"C:/Users/{userName}/Downloads/participant.pdf", Outlook.OlAttachmentType.olByValue, Type.Missing, Type.Missing);
                 mailItem.Display(false);
             }
             catch (Exception ex)
