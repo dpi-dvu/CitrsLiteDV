@@ -27,7 +27,7 @@ namespace CitrsLite.Business.Services
                 MailMessage message = new MailMessage();
                 message.IsBodyHtml= true;
                 message.Body = template;
-                message.To.Add(new MailAddress("Don.Vu@fdacs.gov"));
+                message.To.Add(new MailAddress("test@test.gov"));
                 message.From = (new MailAddress("Citrs@fdacs.gov", "Citrs"));
                 message.Subject = "Testing Attachment";
 
