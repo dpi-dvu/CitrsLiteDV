@@ -25,7 +25,5 @@ namespace CitrsLite.Business.ViewModels.ParticipantViewModels
         public string State { get; set; }
 
         public bool IsActive { get; set; } = true;
-
-        public string UserName { get; set; }
     }
 }

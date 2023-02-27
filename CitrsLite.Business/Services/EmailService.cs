@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using iText.Html2pdf;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace CitrsLite.Business.Services
@@ -61,7 +63,7 @@ namespace CitrsLite.Business.Services
             }
         }
 
-        public async Task OpenOutlookAsync(int participantId, string userName, string path)
+        public async Task OpenOutlookAsync(int participantId, string path)
         {
             try
             {
@@ -74,10 +76,11 @@ namespace CitrsLite.Business.Services
                 mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatHTML;
                 mailItem.HTMLBody = template;
 
-                //byte[] pdf = await _participantService.GetPdfAsync(participantId, path);
-
-                userName = _userService.shortenUserName(userName);
-                mailItem.Attachments.Add($"C:/Users/{userName}/Downloads/participant.pdf", Outlook.OlAttachmentType.olByValue, Type.Missing, Type.Missing);
+                string filePath = System.IO.Path.Combine(path, $@"Documents/Part_Detail.pdf");
+                byte[] document = await _participantService.GetPdfAsync(participantId, path);
+                File.WriteAllBytes(filePath, document);
+                
+                mailItem.Attachments.Add(filePath, Outlook.OlAttachmentType.olByValue, Type.Missing, Type.Missing);
                 mailItem.Display(false);
             }
             catch (Exception ex)

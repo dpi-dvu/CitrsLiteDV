@@ -60,7 +60,7 @@
                            EndIcon="@Icons.Custom.FileFormats.FilePdf"
                            Style="color: black"
                            Color="Color.Tertiary"
-                           Class="mx-2 rounded-pill">
+                           Class="mx-1 rounded-pill">
                            PDF
                 </MudButton>
                 <MudButton OnClick="() => EmailAsync(Model.Id)"
@@ -68,11 +68,15 @@
                            EndIcon="@Icons.Material.Filled.Email"
                            Style="color: black"
                            Color="Color.Primary"
-                           Class="mx-2 rounded-pill">
+                           Class="mx-1 rounded-pill">
                            Email
                 </MudButton>
-                <MudButton OnClick="() => OpenOutlookAsync(Model.Id)">  
-                    Open Outlook to Email
+                <MudButton OnClick="() => OpenOutlookAsync(Model.Id)"
+                           Variant="Variant.Filled"
+                           Color="Color.Success"
+                           Style="color: black"
+                           Class="mx-1 rounded-pill">
+                           Outlook
                 </MudButton>
             </MudCardActions>
         </MudCard>
@@ -104,15 +108,8 @@
 
     public async Task OpenOutlookAsync(int id)
     {
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
-        Model.UserName = authState.User.Identity?.Name ?? "Unknown user";
-        await emailService.OpenOutlookAsync(id, Model.UserName, WebEnvironment.WebRootPath);
         SnackbarService.Add("Outlook is opening...", Severity.Info);
-    }
-
-    private async Task setUserName()
-    {
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
-        Model.UserName = authState.User.Identity?.Name ?? "Unknown user";
+        await emailService.OpenOutlookAsync(id, WebEnvironment.WebRootPath);
+        
     }
 }
