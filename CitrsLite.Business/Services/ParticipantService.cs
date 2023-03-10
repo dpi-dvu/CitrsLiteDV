@@ -72,11 +72,6 @@ namespace CitrsLite.Business.Services
             await _data.SaveChangesAsync();
         }
 
-        public IEnumerable<Participant> GetList()
-        {
-            return _data.Participants.GetList();
-        }
-
         public async Task<IEnumerable<Participant>> GetListAsync()
         { 
             return await _data.Participants.GetListAsync();
@@ -108,6 +103,24 @@ namespace CitrsLite.Business.Services
                 Console.WriteLine(ex.ToString());
                 throw;
             }
+        }
+
+        public async Task<IEnumerable<Participant>> GetParticipantsAsync(ParticipantDetailViewModel model)
+        {
+            string? typeWithUnderscore = model.Type?.ToString().Replace(" ", "_");
+
+            var participants = await _data.Participants
+                .GetListAsync(p => model == null ||
+                    model.Type == null ||
+                    p.Type == model.Type ||
+                    p.Type == typeWithUnderscore);
+
+            return participants
+                .Where(p => model?.Name == null || p.Name.Contains(model.Name))
+                .Where(p => model?.PhoneNumber == null || p.PhoneNumber.Contains(model.PhoneNumber))
+                .Where(p => model?.Address == null || p.Address.Contains(model.Address))
+                .Where(p => model?.City == null || p.City.Contains(model.City))
+                .Where(p => model?.State == null || p.State.Contains(model.State));
         }
 
         public IEnumerable<ParticipantExcelDTO> GetParticipantExcelData(ParticipantDetailViewModel request)
